@@ -2,15 +2,15 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="store.stz7750.stz.mapper.userMapper">
-    <select id="selectUserInfo" resultType="store.stz7750.stz.vo.userVO">
+<mapper namespace="store.stz7750.stz.mapper.UserMapper">
+    <select id="selectUserInfo" resultType="store.stz7750.stz.vo.UserVO">
         SELECT
             *
         FROM
             userinfo
     </select>
 
-    <insert id="insertUser" parameterType="store.stz7750.stz.vo.userVO">
+    <insert id="insertUser" parameterType="store.stz7750.stz.vo.UserVO">
         INSERT INTO
             userinfo
             (

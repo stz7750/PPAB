@@ -4,12 +4,12 @@ package store.stz7750.stz.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import store.stz7750.stz.service.userService;
-import store.stz7750.stz.vo.userVO;
-import javax.mail.*;
-import javax.mail.internet.*;
+import store.stz7750.stz.service.UserService;
+import store.stz7750.stz.vo.EmailVO;
+import store.stz7750.stz.vo.UserVO;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -19,14 +19,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class userController {
+public class UserController {
 
     @Autowired
-    userService service;
+    UserService service;
+
 
     @GetMapping("/userInfo")
-    public List<userVO> selectUserInfo(HttpServletRequest request) throws Exception{
-        List<userVO> userInfo = service.selectUserInfo();
+    public List<UserVO> selectUserInfo(HttpServletRequest request) throws Exception{
+        List<UserVO> userInfo = service.selectUserInfo();
         String ip = Inet4Address.getLocalHost().getHostAddress();
         System.out.println("ipv4"+ip);
         System.out.println("request"+broswserInfo(request));
@@ -34,7 +35,7 @@ public class userController {
     }
 
     @PutMapping("/join")
-    public void addUser(@RequestBody userVO vo , HttpServletRequest request){
+    public void addUser(@RequestBody UserVO vo , HttpServletRequest request)throws Exception{
         String agent = request.getHeader("USER-AGENT");
 
         String os = getClientOS(agent);
@@ -45,6 +46,8 @@ public class userController {
         vo.setIp(ip);
         vo.setBrowser(browser);
         int result = service.addUser(vo);
+
+        sendMail(vo.getEmail(), os, ip, browser);
     }
 
     public static Map<String, Object> broswserInfo(HttpServletRequest request){
@@ -136,38 +139,47 @@ public class userController {
         return browser;
     }
 
-    public class EmailSender {
+    public void sendMail(String emailAddress, String os, String ip, String browser) throws Exception {
 
-        public static void main(String[] args) throws Exception {
-            String to = "받는사람@gmail.com"; // 받는 사람의 이메일 주소
-            String from = "보내는사람@gmail.com"; // 보내는 사람의 이메일 주소
-            String password = "보내는사람의 비밀번호"; // 보내는 사람의 이메일 계정 비밀번호
-            String host = "smtp.gmail.com"; // 구글 메일 서버 호스트 이름
+        EmailVO email = new EmailVO();
 
-            // SMTP 프로토콜 설정
-            Properties props = new Properties();
-            props.setProperty("mail.smtp.host", host);
-            props.setProperty("mail.smtp.port", "587");
-            props.setProperty("mail.smtp.auth", "true");
-            props.setProperty("mail.smtp.starttls.enable", "true");
+        String receiver = emailAddress; // Receiver.
 
-            // 보내는 사람 계정 정보 설정
-            Session session = Session.getInstance(props, new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(from, password);
-                }
-            });
+        String subject = "보안 접속 메세지 입니다.";
 
-            // 메일 내용 작성
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(from));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            msg.setSubject("메일 제목");
-            msg.setText("메일 내용");
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String formatedNow = now.format(formatter);
 
-            // 메일 보내기
-            Transport.send(msg);
-        }
+        String content = "접속 일자 :"+formatedNow+"\n접속 운영체제 :"+os+"\n접속 ip :"+ip+"\n 접속 브라우저 :"+browser;
+
+        email.setReceiver(receiver);
+        email.setSubject(subject);
+        email.setContent(content);
+
+        Boolean result = service.sendMail(email);
+
+
+    }
+    @PostMapping("/send")
+    public void sendMail2(@RequestParam(name = "emailAddress") String emailAddress) throws Exception {
+
+        EmailVO email = new EmailVO();
+
+        String receiver = emailAddress; // Receiver.
+
+        String subject = "Email 제목";
+
+
+        String content = "안녕하세요? 테스트 이메일 입니다.";
+
+        email.setReceiver(receiver);
+        email.setSubject(subject);
+        email.setContent(content);
+
+        Boolean result = service.sendMail(email);
+
+
     }
 
 }

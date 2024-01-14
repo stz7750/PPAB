@@ -3,7 +3,7 @@ package store.stz7750.stz.vo;
 import lombok.Data;
 
 @Data
-public class userVO {
+public class UserVO {
     private String id;
     private String name;
     private String ip;
