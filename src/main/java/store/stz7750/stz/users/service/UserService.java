@@ -1,24 +1,30 @@
-package store.stz7750.stz.service;
+package store.stz7750.stz.users.service;
 
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import store.stz7750.stz.mapper.UserMapper;
-import store.stz7750.stz.vo.EmailVO;
-import store.stz7750.stz.vo.UserVO;
+import org.springframework.transaction.annotation.Transactional;
+
+import store.stz7750.stz.users.mapper.UserMapper;
+import store.stz7750.stz.users.vo.EmailVO;
+import store.stz7750.stz.users.vo.UserVO;
+
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
 
 @Service
+@Log4j2
+@Transactional
 public class UserService {
 
     @Autowired
     UserMapper mapper;
-    public List<UserVO> selectUserInfo(){
-        return mapper.selectUserInfo();
+    public UserVO selectUserInfo(String id, String password){
+        return mapper.selectUserInfo(id,password);
     }
 
     public int addUser(UserVO vo){

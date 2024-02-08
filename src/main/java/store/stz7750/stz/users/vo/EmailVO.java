@@ -1,4 +1,4 @@
-package store.stz7750.stz.vo;
+package store.stz7750.stz.users.vo;
 
 
 import lombok.Data;

@@ -1,19 +1,22 @@
-package store.stz7750.stz.controller;
+package store.stz7750.stz.users.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import store.stz7750.stz.service.UserService;
-import store.stz7750.stz.vo.EmailVO;
-import store.stz7750.stz.vo.UserVO;
+
+import store.stz7750.stz.jwtutil.JwtUtil;
+import store.stz7750.stz.users.service.UserService;
+import store.stz7750.stz.users.vo.EmailVO;
+import store.stz7750.stz.users.vo.UserVO;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import java.net.Inet4Address;
 import java.util.List;
 
@@ -23,16 +26,6 @@ public class UserController {
 
     @Autowired
     UserService service;
-
-
-    @GetMapping("/userInfo")
-    public List<UserVO> selectUserInfo(HttpServletRequest request) throws Exception{
-        List<UserVO> userInfo = service.selectUserInfo();
-        String ip = Inet4Address.getLocalHost().getHostAddress();
-        System.out.println("ipv4"+ip);
-        System.out.println("request"+broswserInfo(request));
-        return userInfo;
-    }
 
     @PutMapping("/join")
     public void addUser(@RequestBody UserVO vo , HttpServletRequest request)throws Exception{
@@ -161,25 +154,37 @@ public class UserController {
 
 
     }
-    @PostMapping("/send")
-    public void sendMail2(@RequestParam(name = "emailAddress") String emailAddress) throws Exception {
 
-        EmailVO email = new EmailVO();
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserVO vo) {
 
-        String receiver = emailAddress; // Receiver.
+        UserVO user = service.selectUserInfo(vo.getId(), vo.getPassword());
 
-        String subject = "Email 제목";
-
-
-        String content = "안녕하세요? 테스트 이메일 입니다.";
-
-        email.setReceiver(receiver);
-        email.setSubject(subject);
-        email.setContent(content);
-
-        Boolean result = service.sendMail(email);
-
-
+        if (user != null) {
+            JwtUtil jwtUtil = new JwtUtil();
+            String token = jwtUtil.generateToken(user.getId());
+            return ResponseEntity.ok(new AuthenticationResponse(token));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패");
+        }
     }
+
+    public class AuthenticationResponse {
+        private String token;
+
+        public AuthenticationResponse(String token) {
+            this.token = token;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+    }
+
+
 
 }
