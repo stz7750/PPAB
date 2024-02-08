@@ -28,12 +28,12 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token, String username) {
-        String tokenUsername = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        String tokenUsername = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
         return (username.equals(tokenUsername) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
-        final Date expiration = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+        final Date expiration = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getExpiration();
         return expiration.before(new Date());
     }
 }
