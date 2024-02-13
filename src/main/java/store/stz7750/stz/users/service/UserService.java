@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import store.stz7750.stz.users.mapper.UserMapper;
 import store.stz7750.stz.users.vo.EmailVO;
@@ -23,7 +24,14 @@ public class UserService {
 
     @Autowired
     UserMapper mapper;
+
+    private JdbcTemplate jdbcTemplate;
+
+    public UserVO findbyUserInfo(String id){
+        return mapper.findByUserInfo(id);
+    }
     public UserVO selectUserInfo(String id, String password){
+        //jdbcTemplate.update("INSERT INTO userInfo(user_name, tel, exchangeTime, ac, exchangeType) values (?,?,?,?,?)", id, password);
         return mapper.selectUserInfo(id,password);
     }
 
@@ -62,4 +70,6 @@ public class UserService {
         return false;
 
     }
+
+
 }

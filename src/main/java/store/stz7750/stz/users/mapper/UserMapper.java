@@ -12,8 +12,13 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
+    @Select("SELECT * FROM userInfo WHERE id = #{id}")
+    UserVO findByUserInfo(@Param("id") String id);
+
     @Select("SELECT * FROM userinfo WHERE id = #{id} AND password = #{password}")
     UserVO selectUserInfo(@Param("id")String id, @Param("password")String password);
 
     int insertUser(UserVO vo);
+
+    
 }
