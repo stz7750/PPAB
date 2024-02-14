@@ -36,6 +36,7 @@ public class UserService {
     }
 
     public int addUser(UserVO vo){
+        vo.setRole("member");
         return mapper.insertUser(vo);
     }
 

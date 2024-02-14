@@ -12,3 +12,4 @@ public class StzApplication extends SpringBootServletInitializer {
 	}
 
 }
+ 
