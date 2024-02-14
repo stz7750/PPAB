@@ -41,7 +41,7 @@
                 #{os},
                 #{browser},
                 #{email},
-                #{password}
+                public.crypt(#{password, jdbcType=VARCHAR}, gen_salt('bf'))
             )
     </insert>
 </mapper>
