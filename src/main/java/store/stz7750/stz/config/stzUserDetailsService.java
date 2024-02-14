@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import store.stz7750.stz.users.service.UserService;
 import store.stz7750.stz.users.vo.UserVO;
@@ -17,10 +18,10 @@ public class stzUserDetailsService implements UserDetailsService{
     UserService service;
 
     @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        UserVO user = service.findbyUserInfo(id);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserVO user = service.findbyUserInfo(username);
         if(user == null){
-            throw new UsernameNotFoundException("해당 사용자는 존재하지 않습니다. 사용자 이름: "+id);
+            throw new UsernameNotFoundException("해당 사용자는 존재하지 않습니다. 사용자 이름: "+username);
         }else {
             return new SecurityUser(user);
         }

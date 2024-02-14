@@ -27,29 +27,31 @@ public class CustomSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        /* httpSecurity 는 대부분의 설정을 담당하게 된다. (세부적인 보안 기능을 설정할 수 있는 API 제공) */
         log.info("---------------------Security config------------------");
         http.cors(httpSecurityCorsConfigurer -> {
             httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
         }); // cors 허용.
         http.formLogin(config -> {
-            config.loginPage("/login");
+            config.loginPage("/api/login");
             config.successHandler(new APILoginSuccessHandler());
             config.failureHandler(new APILoginFailHandler());
-        });  /* 기본 말고 커스텀 로그인 페이지로 접속해라. 
-        니가 로그인에 성공했어? 그럼 핸들러가 동작할꺼야 */
+        });  /* 기본 말고 커스텀 로그인 페이지로 접속해라.(Back , front 가 나눠진 프로젝트에선 api호출)
+        니가 로그인에 성공했어? 그럼 핸들러가 동작할꺼야 근데 성공,실패로 나눠서 동작하지*/
 
         http.sessionManagement(httpSecuritySessionManagementConfigurer->{
             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.NEVER);
         }); // 세션 만들지마라
         
         http.csrf(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable());
+        /* rest api 는 csrf 공격에 안전하고 매번 인증을 받아야하는 상황이라서 disable 처리를 해준다. */
         return http.build();
     }
-
+/* 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
-    }
+    } */
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

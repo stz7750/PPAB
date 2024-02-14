@@ -19,6 +19,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.net.Inet4Address;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -156,18 +162,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserVO vo) {
-
-        UserVO user = service.selectUserInfo(vo.getId(), vo.getPassword());
-
-        if (user != null) {
-            JwtUtil jwtUtil = new JwtUtil();
-            String token = jwtUtil.generateToken(user.getId());
-            return ResponseEntity.ok(new AuthenticationResponse(token));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패");
-        }
+    public String login(@RequestBody UserVO vo) {
+        vo.getId();
+        vo.getPassword();
+        return new String();
     }
+
+    @GetMapping("/logSuccess")
+    public String logSuccess(@RequestParam String param) {
+        return new String();
+    }
+    
 
     public class AuthenticationResponse {
         private String token;
@@ -184,6 +189,14 @@ public class UserController {
             this.token = token;
         }
     }
+
+    /* @PostMapping("/logout")
+    public String logout(@RequestBody String ) {
+        //TODO: process POST request
+        
+        return entity;
+    } */
+    
 
 
 

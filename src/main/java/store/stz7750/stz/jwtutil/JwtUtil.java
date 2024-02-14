@@ -1,32 +1,56 @@
 package store.stz7750.stz.jwtutil;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.*;
 
 import java.security.Key;
+import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.Map;
+
+import javax.crypto.SecretKey;
 
 public class JwtUtil {
-    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static String key = "1234567890123456789012345678901234567890";
 
-    public String generateToken(String username) {
-        long now = System.currentTimeMillis();
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + 900000)) // 15분 후 만료
-                .signWith(secretKey)
-                .compact();
+    public static String generateToken(Map<String, Object> valueMap, int min) {
+        SecretKey key = null;
+        try{
+        key = Keys.hmacShaKeyFor(JwtUtil.key.getBytes("UTF-8"));
+        }catch(Exception e){
+        throw new RuntimeException(e.getMessage());
+        }
+        String jwtStr = Jwts.builder()
+        .setHeader(Map.of("typ","JWT"))
+        .setClaims(valueMap)
+        .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
+        .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(min).toInstant()))
+        .signWith(key)
+        .compact();
+        return jwtStr;
     }
 
-    public boolean validateToken(String token, String username) {
-        String tokenUsername = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
-        return (username.equals(tokenUsername) && !isTokenExpired(token));
+    public static Map<String, Object> validateToken(String token) {
+        Map<String, Object> claim = null;
+        try{
+        SecretKey key = Keys.hmacShaKeyFor(JwtUtil.key.getBytes("UTF-8"));
+        claim = Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
+        .getBody();
+        }catch(MalformedJwtException malformedJwtException){
+        throw new CustomJwtException("MalFormed");
+        }catch(ExpiredJwtException expiredJwtException){
+        throw new CustomJwtException("Expired");
+        }catch(InvalidClaimException invalidClaimException){
+        throw new CustomJwtException("Invalid");
+        }catch(JwtException jwtException){
+        throw new CustomJwtException("JWTError");
+        }catch(Exception e){
+        throw new CustomJwtException("Error");
+        }
+        return claim;
     }
 
-    private boolean isTokenExpired(String token) {
-        final Date expiration = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getExpiration();
-        return expiration.before(new Date());
-    }
 }
