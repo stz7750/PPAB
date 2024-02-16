@@ -2,11 +2,11 @@ package store.stz7750.stz.users.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import store.stz7750.stz.jwtutil.CustomJwtException;
 import store.stz7750.stz.jwtutil.JwtUtil;
 import store.stz7750.stz.users.service.UserService;
 import store.stz7750.stz.users.vo.EmailVO;
@@ -23,11 +23,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 
 @RestController
 @RequestMapping("/api")
+@Log4j2
 public class UserController {
 
     @Autowired
@@ -161,43 +165,8 @@ public class UserController {
 
     }
 
-    @PostMapping("/login")
+/*     @PostMapping("/login")
     public String login(@RequestBody UserVO vo) {
-        vo.getId();
-        vo.getPassword();
         return new String();
-    }
-
-    @GetMapping("/logSuccess")
-    public String logSuccess(@RequestParam String param) {
-        return new String();
-    }
-    
-
-    public class AuthenticationResponse {
-        private String token;
-
-        public AuthenticationResponse(String token) {
-            this.token = token;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-    }
-
-    /* @PostMapping("/logout")
-    public String logout(@RequestBody String ) {
-        //TODO: process POST request
-        
-        return entity;
     } */
-    
-
-
-
 }
