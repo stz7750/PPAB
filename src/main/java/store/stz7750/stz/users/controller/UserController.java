@@ -165,8 +165,4 @@ public class UserController {
 
     }
 
-/*     @PostMapping("/login")
-    public String login(@RequestBody UserVO vo) {
-        return new String();
-    } */
 }

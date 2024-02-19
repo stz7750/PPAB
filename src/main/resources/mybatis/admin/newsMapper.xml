@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="store.stz7750.stz.admin.mapper.AdminMapper">
+    <sql id="selectNews">
+        SELECT
+            *
+        FROM
+            news
+    </sql>
+    <select id="selectNews" resultType="store.stz7750.stz.admin.vo.NewsVO">
+        <include refid="selectNews" />
+        <where>
+            <if test="cno != null and cno != ''">
+               AND cno = #{cno}
+            </if>
+        </where>
+    </select>
+
+<!--    <select id="selectLoginCountByType" parameterType="map" resultType="map">
+        <choose>
+            &lt;!&ndash; 일별 데이터 조회 &ndash;&gt;
+            <when test="type == 'daily'">
+                WITH date_series AS (
+                SELECT TO_CHAR(CURRENT_DATE - INTERVAL '1 day' * generate_series(0, 6), 'YYYYMMDD') AS date
+                )
+            </when>
+
+            &lt;!&ndash; 월별 데이터 조회 &ndash;&gt;
+            <when test="type == 'monthly'">
+                WITH date_series AS (
+                SELECT TO_CHAR(DATE_TRUNC('MONTH', CURRENT_DATE) - INTERVAL '1 month' * generate_series(0, 11), 'YYYYMM') AS month
+                )
+            </when>
+
+            &lt;!&ndash; 연도별 데이터 조회 &ndash;&gt;
+            <when test="type == 'yearly'">
+                WITH date_series AS (
+                SELECT TO_CHAR(DATE_TRUNC('YEAR', CURRENT_DATE) - INTERVAL '1 year' * generate_series(0, 4), 'YYYY') AS year
+                )
+            </when>
+        </choose>
+        SELECT
+        date_series.date,
+        COALESCE(COUNT(l.id), 0) AS login_count
+        FROM
+        date_series
+        LEFT JOIN
+        login_logs l ON date_series.date = TO_CHAR(l.current_login_time, 'YYYYMMDD')
+        GROUP BY
+        date_series.date
+        ORDER BY
+        date_series.date DESC
+    </select>-->
+
+    <select id="selectLoginCountByType" parameterType="map" resultType="map">
+        <choose>
+            <!-- 일별 데이터 조회 -->
+            <when test="type == 'daily'">
+                WITH date_series AS (
+                    SELECT TO_CHAR(CURRENT_DATE - INTERVAL '1 day' * generate_series(0, 6), 'YYYY-MM-DD') AS date
+                )
+                SELECT
+                    ds.date,
+                    COALESCE(COUNT(l.id), 0) AS login_count
+                FROM
+                    date_series ds
+                LEFT JOIN
+                    login_logs l ON ds.date = TO_CHAR(l.current_login_time, 'YYYY-MM-DD')
+                GROUP BY
+                    ds.date
+                ORDER BY
+                    ds.date DESC
+            </when>
+
+            <!-- 월별 데이터 조회 -->
+            <when test="type == 'monthly'">
+                WITH month_series AS (
+                    SELECT TO_CHAR(DATE_TRUNC('MONTH', CURRENT_DATE) - INTERVAL '1 month' * generate_series(0, 11), 'YYYY-MM') AS date
+                )
+                SELECT
+                    ms.date,
+                    COALESCE(COUNT(l.id), 0) AS login_count
+                FROM
+                    month_series ms
+                LEFT JOIN
+                    login_logs l ON ms.date = TO_CHAR(DATE_TRUNC('MONTH', l.current_login_time), 'YYYY-MM')
+                GROUP BY
+                    ms.date
+                ORDER BY
+                    ms.date DESC
+            </when>
+
+            <!-- 연도별 데이터 조회 -->
+            <when test="type == 'yearly'">
+                WITH year_series AS (
+                    SELECT TO_CHAR(DATE_TRUNC('YEAR', CURRENT_DATE) - INTERVAL '1 year' * generate_series(0, 4), 'YYYY') AS date
+                )
+                SELECT
+                    ys.date,
+                    COALESCE(COUNT(l.id), 0) AS login_count
+                FROM
+                    year_series ys
+                LEFT JOIN
+                    login_logs l ON ys.date = TO_CHAR(DATE_TRUNC('YEAR', l.current_login_time), 'YYYY')
+                GROUP BY
+                    ys.date
+                ORDER BY
+                    ys.date DESC
+            </when>
+        </choose>
+    </select>
+
+</mapper>

@@ -35,6 +35,8 @@ public class JwtCheckFilter extends OncePerRequestFilter {
 
         if(path.startsWith("/api/")){
             return true;
+        }else if(path.startsWith("/admin/api")){
+            return true;
         }
         log.info("현재 위치는...............:" + path);
         return false;
