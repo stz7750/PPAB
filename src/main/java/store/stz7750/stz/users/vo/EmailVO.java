@@ -9,4 +9,5 @@ public class EmailVO {
     private String content;
     private String date;
     private String receiver;
+    private StringBuilder html;
 }

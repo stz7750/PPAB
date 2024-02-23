@@ -1,3 +1,4 @@
+
 package store.stz7750.stz.users.controller;
 
 
@@ -143,26 +144,19 @@ public class UserController {
     }
 
     public void sendMail(String emailAddress, String os, String ip, String browser) throws Exception {
-
         EmailVO email = new EmailVO();
-
-        String receiver = emailAddress; // Receiver.
-
+        String receiver = emailAddress;
         String subject = "보안 접속 메세지 입니다.";
-
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String formatedNow = now.format(formatter);
-
-        String content = "접속 일자 :"+formatedNow+"\n접속 운영체제 :"+os+"\n접속 ip :"+ip+"\n 접속 브라우저 :"+browser;
-
+        String htmlBuilder = new String();
+        htmlBuilder += "<html> <head> <style> p{ text-align: center; } body { font-family: Arial, sans-serif; background-color: rgb(255 255 255); } </style> </head> <body> <h1>당신은 접속 입니까?</h1><div style='background-color : #F4F3F7'><p>접속 일자: "+formatedNow+"</p> <br> <hr> <p>접속 운영체제: "+os+"</p> <br> <hr> <p>접속 IP: "+ip+"</p> <br> <hr>  <p>접속 브라우저: "+browser+"</p> <br> <hr> <button><a href='http://localhost:1208/login'>사이트 로그인</button></div> </body></html>";
         email.setReceiver(receiver);
         email.setSubject(subject);
-        email.setContent(content);
+        email.setContent(htmlBuilder);
 
         Boolean result = service.sendMail(email);
-
-
     }
 
 }

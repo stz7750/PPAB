@@ -3,10 +3,7 @@ package store.stz7750.stz.admin.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import store.stz7750.stz.admin.service.AdminService;
 import store.stz7750.stz.admin.vo.EventVO;
 import store.stz7750.stz.admin.vo.NewsVO;
@@ -43,5 +40,17 @@ public class AdminController {
         Map<String, Object> params = new HashMap<>();
         params.put("type", (type != null) ? type : "daily");
         return service.getLoginCountByType(params);
+    }
+
+    @PostMapping(value={"/upsertEvent/{vo}"})
+    public String upsertEvent(@PathVariable NewsVO vo){
+        int cntEvent = service.upsertEvent(vo);
+        if(cntEvent > 0){
+            String result = "success";
+            return result;
+        }else {
+            String result = "fail";
+            return result;
+        }
     }
 }

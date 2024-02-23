@@ -25,4 +25,9 @@ public class AdminService {
     public List<Map<String, Object>> getLoginCountByType(Map<String, Object> params) {
         return mapper.selectLoginCountByType(params);
     }
+
+    public int upsertEvent(NewsVO vo){
+        int cntEvent = mapper.upsertEvent(vo);
+        return cntEvent;
+    }
 }

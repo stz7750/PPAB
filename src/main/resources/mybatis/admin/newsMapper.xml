@@ -9,6 +9,39 @@
         FROM
             news
     </sql>
+
+
+    <insert id="upsertEvent" parameterType="store.stz7750.stz.admin.vo.NewsVO">
+        INSERT INTO
+            news
+            (
+                cno,
+                title,
+                content,
+                regDt,
+                editor,
+                modifiDt,
+                images
+            )
+            VALEUS
+            (
+                #{cno},
+                #{title},
+                #{content},
+                now(),
+                #{editor},
+                #{modifiDt},
+                #{images}
+            )
+            ON CONFLICT (cno) DO UPDATE
+            SET
+            title = EXCLUDED.title,
+            content = EXCLUDED.content,
+            editor = EXCLUDED.editor,
+            modifiDt = EXCLUDED.modifi_dt,
+            images = EXCLUDED.images
+    </insert>
+
     <select id="selectNews" resultType="store.stz7750.stz.admin.vo.NewsVO">
         <include refid="selectNews" />
         <where>
@@ -111,5 +144,6 @@
             </when>
         </choose>
     </select>
+
 
 </mapper>
