@@ -17,5 +17,5 @@ public interface AdminMapper {
 
     List<Map<String, Object>> selectLoginCountByType(Map<String, Object> params);
 
-    int upsertEvent(NewsVO vo);
+    int upsertEvent(EventVO vo);
 }

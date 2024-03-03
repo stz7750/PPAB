@@ -42,8 +42,8 @@ public class AdminController {
         return service.getLoginCountByType(params);
     }
 
-    @PostMapping(value={"/upsertEvent/{vo}"})
-    public String upsertEvent(@PathVariable NewsVO vo){
+    @PostMapping(value="/upsertEvent")
+    public String upsertEvent(@RequestBody EventVO vo){
         int cntEvent = service.upsertEvent(vo);
         if(cntEvent > 0){
             String result = "success";

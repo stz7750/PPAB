@@ -7,46 +7,55 @@
         SELECT
             *
         FROM
-            news
+            event
     </sql>
 
 
-    <insert id="upsertEvent" parameterType="store.stz7750.stz.admin.vo.NewsVO">
+    <insert id="upsertEvent" parameterType="store.stz7750.stz.admin.vo.EventVO">
         INSERT INTO
-            news
+            event
             (
-                cno,
+                event_id,
                 title,
                 content,
-                regDt,
+                reg_dt,
                 editor,
-                modifiDt,
-                images
+                images,
+                bngn_dt,
+                end_dt,
+                type
             )
-            VALEUS
+            VALUES
             (
-                #{cno},
+                (select max(event_id)+1 from event),
                 #{title},
                 #{content},
                 now(),
                 #{editor},
-                #{modifiDt},
-                #{images}
+                #{images},
+                #{bngnDt},
+                #{endDt},
+                #{type}
             )
-            ON CONFLICT (cno) DO UPDATE
+            ON CONFLICT (event_id) DO UPDATE
             SET
             title = EXCLUDED.title,
             content = EXCLUDED.content,
             editor = EXCLUDED.editor,
+        <if test="modifiDt != null and  modifi != ''">
             modifiDt = EXCLUDED.modifi_dt,
-            images = EXCLUDED.images
+        </if>
+            images = EXCLUDED.images,
+            bngn_dt = EXCLUDED.bngn_dt,
+            end_dt = EXCLUDED.end_dt,
+            type = EXCLUDED.type
     </insert>
 
-    <select id="selectNews" resultType="store.stz7750.stz.admin.vo.NewsVO">
+    <select id="selectNews" resultType="store.stz7750.stz.admin.vo.EventVO">
         <include refid="selectNews" />
         <where>
-            <if test="cno != null and cno != ''">
-               AND cno = #{cno}
+            <if test="eventId != null and eventId != ''">
+               AND event_id = #{eventId}
             </if>
         </where>
     </select>

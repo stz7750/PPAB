@@ -31,7 +31,8 @@
                 os,
                 browser,
                 email,
-                password
+                password,
+                role
             )
             VALUES
             (
@@ -41,7 +42,8 @@
                 #{os},
                 #{browser},
                 #{email},
-                public.crypt(#{password, jdbcType=VARCHAR}, gen_salt('bf'))
+                public.crypt(#{password, jdbcType=VARCHAR}, gen_salt('bf')),
+                #{role}
             )
     </insert>
 </mapper>

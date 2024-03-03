@@ -26,7 +26,7 @@ public class AdminService {
         return mapper.selectLoginCountByType(params);
     }
 
-    public int upsertEvent(NewsVO vo){
+    public int upsertEvent(EventVO vo){
         int cntEvent = mapper.upsertEvent(vo);
         return cntEvent;
     }
