@@ -42,6 +42,7 @@ public class AdminController {
         return service.getLoginCountByType(params);
     }
 
+
     @PostMapping(value="/upsertEvent")
     public String upsertEvent(@RequestBody EventVO vo){
         int cntEvent = service.upsertEvent(vo);
@@ -52,5 +53,11 @@ public class AdminController {
             String result = "fail";
             return result;
         }
+    }
+
+    @GetMapping(value="/getMenu")
+    public List<Map<String, Object>> getMenu(){
+        List<Map<String,Object>> result = service.getMenu();
+        return result;
     }
 }

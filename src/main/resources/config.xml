@@ -5,6 +5,7 @@
 <configuration>
     <settings>
         <setting name="jdbcTypeForNull" value="NULL"/>
+        <!--마이바티스 카멜케이스 설정-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
 </configuration>

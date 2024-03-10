@@ -30,4 +30,8 @@ public class AdminService {
         int cntEvent = mapper.upsertEvent(vo);
         return cntEvent;
     }
+
+    public List<Map<String, Object>> getMenu(){
+        return mapper.selectMenu();
+    }
 }

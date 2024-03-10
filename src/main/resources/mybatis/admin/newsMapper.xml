@@ -154,5 +154,16 @@
         </choose>
     </select>
 
+    <select id="selectMenu" resultType="Map">
+        WITH RECURSIVE menu_hierarchy AS (
+            SELECT menu_id, menu_name, parent_menu_id, menu_seq , menu_path
+            FROM menu_info
+            UNION
+            SELECT mt.menu_id, mt.menu_name, mt.parent_menu_id, mt.menu_seq, mt.menu_path
+            FROM menu_info mt
+                     JOIN menu_hierarchy mh ON mt.parent_menu_id = mh.menu_id
+        )
+        SELECT * FROM menu_hierarchy;
+    </select>
 
 </mapper>

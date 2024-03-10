@@ -18,4 +18,6 @@ public interface AdminMapper {
     List<Map<String, Object>> selectLoginCountByType(Map<String, Object> params);
 
     int upsertEvent(EventVO vo);
-}
+
+    List<Map<String, Object>> selectMenu();
+ }
