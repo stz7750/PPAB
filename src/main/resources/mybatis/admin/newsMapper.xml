@@ -54,9 +54,14 @@
     <select id="selectNews" resultType="store.stz7750.stz.admin.vo.EventVO">
         <include refid="selectNews" />
         <where>
-            <if test="eventId != null and eventId != ''">
+            <choose>
+            <when test="eventId != null and eventId != ''">
                AND event_id = #{eventId}
-            </if>
+            </when>
+            <when test="editor != null and editor != ''">
+                AND editor = #{editor}
+            </when>
+            </choose>
         </where>
     </select>
 
@@ -165,5 +170,32 @@
         )
         SELECT * FROM menu_hierarchy;
     </select>
+
+    <update id="upsertMenu">
+        WITH menu_upsert AS (
+            UPDATE
+                menu_info
+            SET
+                menu_id,
+                menu_name,
+                parent_menu_id,
+                menu_seq,
+                menu_path
+            RETURNING *
+        )
+        INSERT INTO
+            menu_info
+            (
+                menu_id,
+                menu_name,
+                parent_menu_id,
+                menu_seq,
+                menu_path
+            )
+        VALUES
+            (
+                #{menu_id}
+            )
+    </update>
 
 </mapper>

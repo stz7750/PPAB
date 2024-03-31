@@ -21,4 +21,5 @@ public class EventVO {
     private LocalDate bngnDt;
     private LocalDate endDt;
     private String type;
+    private String color;
 }

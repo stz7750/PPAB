@@ -14,8 +14,8 @@ public class AdminService {
 
     @Autowired
     AdminMapper mapper;
-    public List<NewsVO> getAllNews(Integer cno){
-        return mapper.selectNews(cno);
+    public List<EventVO> getAllNews(EventVO vo){
+        return mapper.selectNews(vo);
     }
 
     public List<EventVO> getAllEvent(Integer eventNo){

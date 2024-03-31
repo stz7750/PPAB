@@ -22,11 +22,18 @@ public class AdminController {
     @Autowired
     AdminService service;
     /* 메인페이지 뉴스 */
-    @GetMapping(value={"/news","/news/{cno}"})
-    public List<NewsVO> getAllNews(@PathVariable(required = false) Integer cno) {
-        List<NewsVO> vo =  service.getAllNews(cno);
+    @GetMapping("/news")
+    public List<EventVO> getAllNews(@RequestParam(required = false) Integer cno,
+                                   @RequestParam(required = false) String editor) {
+        EventVO eventVO = new EventVO();
+        if(cno != null){
+            eventVO.setEventId(cno);
+        }
+        eventVO.setEditor(editor);
+        List<EventVO> vo =  service.getAllNews(eventVO);
         return vo;
     }
+
 
     /*메인페이지 이벤트 */
     @GetMapping(value={"/event", "/event/{eventNo}"})

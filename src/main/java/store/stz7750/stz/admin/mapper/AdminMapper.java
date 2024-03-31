@@ -11,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface AdminMapper {
 
-    List<NewsVO> selectNews(Integer cno);
+    List<EventVO> selectNews(EventVO vo);
 
     List<EventVO> selectEvents(Integer event);
 
