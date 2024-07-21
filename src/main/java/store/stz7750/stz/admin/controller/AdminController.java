@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import store.stz7750.stz.admin.service.AdminService;
 import store.stz7750.stz.admin.vo.EventVO;
 import store.stz7750.stz.admin.vo.NewsVO;
+import store.stz7750.stz.global.controller.BaseController;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/admin/api")
-public class AdminController {
+public class AdminController extends BaseController {
 
     @Autowired
     AdminService service;

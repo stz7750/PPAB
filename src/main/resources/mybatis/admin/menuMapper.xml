@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="store.stz7750.stz.admin.mapper.MenuMapper">
+
+    <select id="getAllMenus" resultType="MenuVo">
+        WITH RECURSIVE menu_hierarchy AS (
+            SELECT menu_id, menu_name, parent_menu_id, menu_seq , menu_path, menu_id::text as path
+            FROM menu_info
+            where parent_menu_id is null
+            union
+            SELECT mt.menu_id, mt.menu_name, mt.parent_menu_id, mt.menu_seq, mt.menu_path, mh.path  || '=>' || mt.menu_id ::text as path
+            FROM menu_info mt
+                     JOIN menu_hierarchy mh ON mt.parent_menu_id = mh.menu_id
+        )
+        SELECT * FROM menu_hierarchy
+        order by path
+    </select>
+
+    <select id="getMenuById" parameterType="long" resultType="MenuVo">
+        SELECT * FROM menu_info WHERE menu_id = #{menuId}
+    </select>
+
+    <select id="upsertMenuById" parameterType="MenuVo" resultType="String">
+        WITH upsert AS (
+        UPDATE menu_info
+        SET
+            menu_name = #{menuName},
+            parent_menu_id = #{parentMenuId},
+            menu_seq = #{menuSeq},
+            menu_path = #{menuPath},
+            path_name = #{pathName}
+        WHERE
+            menu_id = #{menuId}
+            RETURNING menu_name
+        )
+        INSERT INTO
+            menu_info
+            (
+             menu_id,
+             menu_name,
+             parent_menu_id,
+             menu_seq,
+             menu_path,
+             path_name
+            )
+        SELECT
+            #{menuId},
+            #{menuName},
+            #{parentMenuId},
+            #{menuSeq},
+            #{menuPath},
+            #{pathName}
+            WHERE NOT EXISTS (SELECT 1 FROM upsert)
+        RETURNING menu_name
+    </select>
+
+</mapper>

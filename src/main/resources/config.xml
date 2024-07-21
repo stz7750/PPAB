@@ -7,5 +7,11 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
         <!--마이바티스 카멜케이스 설정-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="defaultExecutorType" value="SIMPLE" />
+
     </settings>
+    <typeAliases>
+        <typeAlias alias="EventVO" type="store.stz7750.stz.admin.vo.EventVO"/>
+        <typeAlias type="store.stz7750.stz.admin.vo.MenuVo" alias="MenuVo"/>
+    </typeAliases>
 </configuration>
