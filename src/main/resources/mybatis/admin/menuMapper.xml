@@ -5,12 +5,13 @@
 <mapper namespace="store.stz7750.stz.admin.mapper.MenuMapper">
 
     <select id="getAllMenus" resultType="MenuVo">
+        /* getAllMenus :  메뉴 조회 */
         WITH RECURSIVE menu_hierarchy AS (
-            SELECT menu_id, menu_name, parent_menu_id, menu_seq , menu_path, menu_id::text as path
+            SELECT menu_id, menu_name, parent_menu_id, menu_seq , menu_path, menu_id::text as path, use_yn
             FROM menu_info
             where parent_menu_id is null
             union
-            SELECT mt.menu_id, mt.menu_name, mt.parent_menu_id, mt.menu_seq, mt.menu_path, mh.path  || '=>' || mt.menu_id ::text as path
+            SELECT mt.menu_id, mt.menu_name, mt.parent_menu_id, mt.menu_seq, mt.menu_path, mh.path  || '=>' || mt.menu_id ::text as path , mt.use_yn
             FROM menu_info mt
                      JOIN menu_hierarchy mh ON mt.parent_menu_id = mh.menu_id
         )
@@ -19,6 +20,7 @@
     </select>
 
     <select id="getMenuById" parameterType="long" resultType="MenuVo">
+        /* getMenuById :  특정 메뉴 조회 */
         SELECT * FROM menu_info WHERE menu_id = #{menuId}
     </select>
 
@@ -26,11 +28,24 @@
         WITH upsert AS (
         UPDATE menu_info
         SET
+            <if test="menuName != null and menuName != '' ">
             menu_name = #{menuName},
-            parent_menu_id = #{parentMenuId},
-            menu_seq = #{menuSeq},
-            menu_path = #{menuPath},
-            path_name = #{pathName}
+            </if>
+            <if test="parentMenuId != null and parentMenuId != ''">
+                parent_menu_id = #{parentMenuId},
+            </if>
+            <if test="menuSeq != null and menuSeq != '' ">
+                menu_seq = #{menuSeq},
+            </if>
+            <if test="menuPath != null and menuPath != '' ">
+                menu_path = #{menuPath},
+            </if>
+            <if test="pathName != null and pathName != ''">
+                path_name = #{pathName}
+            </if>
+            <if test="useYn != null and useYn != '' ">
+                use_yn = #{useYn}
+            </if>
         WHERE
             menu_id = #{menuId}
             RETURNING menu_name

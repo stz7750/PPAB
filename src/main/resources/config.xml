@@ -8,6 +8,8 @@
         <!--마이바티스 카멜케이스 설정-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="defaultExecutorType" value="SIMPLE" />
+        <!-- 마이바티스 Map 타입 null 값 처리 -->
+        <setting name="callSettersOnNulls" value="true"/>
 
     </settings>
     <typeAliases>

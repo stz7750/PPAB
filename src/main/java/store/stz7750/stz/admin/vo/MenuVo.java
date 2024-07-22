@@ -22,5 +22,6 @@ public class MenuVo {
     private String menuPath;
     private String pathName;
     private String path;
+    private String useYn;
 }
 
