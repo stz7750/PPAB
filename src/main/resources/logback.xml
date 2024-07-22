@@ -20,6 +20,8 @@
     <!-- ResultSet 포함 모든 JDBC 호출 정보를 로깅 -->
     <logger name="jdbc.resultset" level="OFF"/>
     <logger name="jdbc.resultsettable" level="INFO"/>
+    <!-- sql 로깅  -->
+    <logger name="jdbc.sqlonly" level="INFO" />
 
     <!-- use Spring default values -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
