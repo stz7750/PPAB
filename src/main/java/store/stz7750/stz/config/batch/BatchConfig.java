@@ -22,7 +22,7 @@ import store.stz7750.stz.admin.service.AdminService;
 @RequiredArgsConstructor
 public class BatchConfig {
     private final AdminService adminService;
-    @Scheduled(cron = "0 40 10 * * ?")
+    @Scheduled(cron = "0 35 18 * * ?")
     public void runBatchJob() {
         adminService.runBatch(null);
     }

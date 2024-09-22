@@ -239,5 +239,27 @@
             )
     </insert>
 
+    <insert id="insertBatchHistory">
+        INSERT INTO
+            batch_hist
+                (
+                    job_name,
+                    start_time,
+                    end_time,
+                    duration_seconds,
+                    status,
+                    error_message
+                )
+        VALUES
+            (
+                #{jobName},
+                #{startTime},
+                #{endTime},
+                #{durationSeconds},
+                #{status},
+                #{errorMessage}
+            );
+    </insert>
+
 
 </mapper>
