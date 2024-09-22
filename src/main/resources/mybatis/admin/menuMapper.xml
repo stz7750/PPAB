@@ -61,7 +61,7 @@
              path_name
             )
         SELECT
-            #{menuId},
+            (SELECT MAX(MENU_ID)+1 FROM MENU_INFO) AS MENU_ID ,
             #{menuName},
             #{parentMenuId},
             #{menuSeq},

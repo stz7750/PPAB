@@ -38,30 +38,14 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @PutMapping("/join")
-    public void addUser(@RequestBody UserVO vo , HttpServletRequest request)throws Exception{
-        String agent = request.getHeader("USER-AGENT");
-
-        String os = getClientOS(agent);
-        String browser = getClientBrowser(agent);
-        String ip = (String)request.getHeader("X-Forwarded-For");
-        if(ip == null || ip.length() == 0 || ip.toLowerCase().equals("unknown")) ip = (String)request.getRemoteAddr();
-        vo.setOs(os);
-        vo.setIp(ip);
-        vo.setBrowser(browser);
-        int result = service.addUser(vo);
-
-        sendMail(vo.getEmail(), os, ip, browser);
-    }
-
     public static Map<String, Object> broswserInfo(HttpServletRequest request){
 
         String agent = request.getHeader("USER-AGENT");
 
         String os = getClientOS(agent);
         String broswser = getClientBrowser(agent);
-        String ip = (String)request.getHeader("X-Forwarded-For");
-        if(ip == null || ip.length() == 0 || ip.toLowerCase().equals("unknown")) ip = (String)request.getRemoteAddr();
+        String ip = request.getHeader("X-Forwarded-For");
+        if(ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) ip = request.getRemoteAddr();
 
         Map<String, Object> map = new HashMap<String, Object>();
 
@@ -71,8 +55,6 @@ public class UserController {
         map.put("broswser", broswser);
         return map;
     }
-
-
 
     public static String getClientOS(String userAgent) {
         String os = "";
@@ -111,8 +93,6 @@ public class UserController {
         return os;
     }
 
-
-
     public static String getClientBrowser(String userAgent) {
         String browser = "";
 
@@ -143,6 +123,22 @@ public class UserController {
         return browser;
     }
 
+    @PutMapping("/join")
+    public void addUser(@RequestBody UserVO vo , HttpServletRequest request)throws Exception{
+        String agent = request.getHeader("USER-AGENT");
+
+        String os = getClientOS(agent);
+        String browser = getClientBrowser(agent);
+        String ip = request.getHeader("X-Forwarded-For");
+        if(ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) ip = request.getRemoteAddr();
+        vo.setOs(os);
+        vo.setIp(ip);
+        vo.setBrowser(browser);
+        service.addUser(vo);
+
+        sendMail(vo.getEmail(), os, ip, browser);
+    }
+
     public void sendMail(String emailAddress, String os, String ip, String browser) throws Exception {
         EmailVO email = new EmailVO();
         String receiver = emailAddress;
@@ -150,7 +146,7 @@ public class UserController {
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String formatedNow = now.format(formatter);
-        String htmlBuilder = new String();
+        String htmlBuilder = "";
         htmlBuilder += "<html> <head> <style> p{ text-align: center; } body { font-family: Arial, sans-serif; background-color: rgb(255 255 255); } </style> </head> <body> <h1>당신은 접속 입니까?</h1><div style='background-color : #F4F3F7'><p>접속 일자: "+formatedNow+"</p> <br> <hr> <p>접속 운영체제: "+os+"</p> <br> <hr> <p>접속 IP: "+ip+"</p> <br> <hr>  <p>접속 브라우저: "+browser+"</p> <br> <hr> <button><a href='http://localhost:1208/login'>사이트 로그인</button></div> </body></html>";
         email.setReceiver(receiver);
         email.setSubject(subject);

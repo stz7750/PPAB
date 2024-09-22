@@ -42,8 +42,38 @@
                 #{os},
                 #{browser},
                 #{email},
-                public.crypt(#{password, jdbcType=VARCHAR}, gen_salt('bf')),
+               /* public.crypt(#{password, jdbcType=VARCHAR}, gen_salt('bf')),*/
+                #{password, jdbcType=VARCHAR}
                 #{role}
             )
     </insert>
+
+    <insert id="insertLoginLog">
+            INSERT INTO login_logs
+            (
+                id,
+                username,
+                current_login_time
+                <if test="etc != null and etc != ''">
+                    , etc
+                </if>
+            )
+            VALUES
+            (
+                #{id},
+                #{username},
+                #{currentLoginTime}
+                <if test="etc != null and etc != ''">
+                    , #{etc}
+                </if>
+            )
+            ON CONFLICT (id)
+            DO UPDATE SET
+                last_login_time = login_logs.current_login_time,
+                current_login_time = #{currentLoginTime}
+                <if test="etc != null and etc != ''">
+                    , etc = #{etc}
+                </if>
+    </insert>
+
 </mapper>

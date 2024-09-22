@@ -5,6 +5,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +16,8 @@ import store.stz7750.stz.users.vo.UserVO;
 
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,11 +29,9 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    UserMapper mapper;
-
-    @Autowired
     protected JavaMailSender mailSender;
-
+    @Autowired
+    UserMapper mapper;
     private JdbcTemplate jdbcTemplate;
 
     /**
@@ -77,8 +78,10 @@ public class UserService {
         boolean username = name.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
 
         if(user == null && passwordLength && !username){
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            vo.setPassword(passwordEncoder.encode(password));
             return mapper.insertUser(vo);
-        }else{
+        } else {
             return 0;
         }
     }
@@ -111,6 +114,12 @@ public class UserService {
 
         return false;
 
+    }
+
+    public void logUserLogin(String userId, String username, String etc) {
+        LocalDateTime currentLoginTime = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(currentLoginTime);
+        mapper.insertLoginLog(userId, username, timestamp, etc);
     }
 
 

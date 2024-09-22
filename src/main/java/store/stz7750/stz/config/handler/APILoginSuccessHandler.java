@@ -1,5 +1,6 @@
 package store.stz7750.stz.config.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.google.gson.Gson;
@@ -20,15 +21,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import store.stz7750.stz.config.SecurityUser;
 import store.stz7750.stz.jwtutil.JwtUtil;
+import store.stz7750.stz.users.service.UserService;
 import store.stz7750.stz.users.vo.UserVO;
 
-@Log4j2 
+@Log4j2
+@RequiredArgsConstructor
 public class APILoginSuccessHandler implements AuthenticationSuccessHandler{
-    
+        private final UserService userService;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-            
 
             log.info("-----------동작은 하냐?--------");
             log.info(authentication);
@@ -36,12 +38,12 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler{
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
             UserVO userVO = securityUser.getUser();
-
+            userService.logUserLogin(userVO.getId(), userVO.getName(), "Login successful");
             Map<String, Object> claims = new HashMap<>();
             claims.put("username", userVO.getId()); 
             claims.put("name", userVO.getName()); 
             claims.put("email", userVO.getEmail()); 
-            claims.put("role", userVO.getRole().toString());
+            claims.put("role", userVO.getRole());
             String accessToken = JwtUtil.generateToken(claims, 10);
             String refreshToken = JwtUtil.generateToken(claims,60*24);
             claims.put("accessToken",accessToken);

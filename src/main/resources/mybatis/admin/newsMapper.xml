@@ -201,4 +201,43 @@
             )
     </update>
 
+    <select id="getAddr" resultType="map" parameterType="map">
+        SELECT
+            ST_X(ST_Centroid(ST_Transform(geom, 4326))) AS longitude,
+            ST_Y(ST_Centroid(ST_Transform(geom, 4326))) AS latitude
+        FROM GISBUILDSEOUL t1
+        <where>
+            <if test="sigKorNm != null and sigKorNm != ''">
+                a4 LIKE '%' || #{sigKorNm} || '%'
+            </if>
+            <if test="bunji != null and bunji != ''">
+                AND a5 LIKE '%' || #{bunji}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertCntntSummaryStats">
+        INSERT INTO cntnt_summary_stats
+            (
+                yr,
+                dt,
+                ttl_logins,
+                ttl_events,
+                ttl_users,
+                reg_dt,
+                reg_by
+            )
+        VALUES
+            (
+                TO_CHAR(NOW(), 'YYYY'),
+                CURRENT_DATE,
+                (SELECT COUNT(1) FROM login_logs),
+                (SELECT COUNT(1) FROM event ),
+                (SELECT COUNT(1) FROM userInfo),
+                NOW(),
+                COALESCE(#{regBy}, 'admin')
+            )
+    </insert>
+
+
 </mapper>

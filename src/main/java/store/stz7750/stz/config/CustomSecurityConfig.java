@@ -1,9 +1,12 @@
 package store.stz7750.stz.config;
 
 import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +25,7 @@ import store.stz7750.stz.config.filter.JwtCheckFilter;
 import store.stz7750.stz.config.handler.APILoginFailHandler;
 import store.stz7750.stz.config.handler.APILoginSuccessHandler;
 import store.stz7750.stz.config.handler.CustomAccessDeniedHandler;
+import store.stz7750.stz.users.service.UserService;
 
 @Configuration
 @Log4j2
@@ -29,6 +33,14 @@ import store.stz7750.stz.config.handler.CustomAccessDeniedHandler;
 @EnableMethodSecurity
 public class CustomSecurityConfig {
 
+    private final UserService userService;
+
+    private final stzUserDetailsService stzUserDetailsService;
+
+/*    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }*/
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,13 +49,13 @@ public class CustomSecurityConfig {
         http.cors(httpSecurityCorsConfigurer -> {
             httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
         }); // cors 허용.
-        http.sessionManagement(httpSecuritySessionManagementConfigurer->{
+        http.sessionManagement(httpSecuritySessionManagementConfigurer -> {
             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.NEVER);
         }); // 세션 만들지마라
         http.csrf(httpSecuritycsrfConfigurer -> httpSecuritycsrfConfigurer.disable());
         http.formLogin(config -> {
             config.loginPage("/api/login");
-            config.successHandler(new APILoginSuccessHandler());
+            config.successHandler(new APILoginSuccessHandler(userService));
             config.failureHandler(new APILoginFailHandler());
         });  /* 기본 말고 커스텀 로그인 페이지로 접속해라.(Back , front 가 나눠진 프로젝트에선 api호출)
         니가 로그인에 성공했어? 그럼 핸들러가 동작할꺼야 근데 성공,실패로 나눠서 동작하지*/
@@ -63,12 +75,22 @@ public class CustomSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+
+
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8888", "http://localhost:1208"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true); // 인증 관련 헤더 허용
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        // boardUserDetailsService를 사용하여 사용자 인증 처리
+        auth.userDetailsService(stzUserDetailsService);
+    }
+
 }

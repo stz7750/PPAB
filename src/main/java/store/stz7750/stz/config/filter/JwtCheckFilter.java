@@ -35,7 +35,7 @@ public class JwtCheckFilter extends OncePerRequestFilter {
 
         if(path.startsWith("/api/")){
             return true;
-        }else if(path.startsWith("/admin/api")){
+        }else if(path.startsWith("/admin/api")) {
             return true;
         }
         log.info("현재 위치는...............:" + path);
@@ -58,25 +58,27 @@ public class JwtCheckFilter extends OncePerRequestFilter {
 
         String authHeaderStr = request.getHeader("Authorization");
         try {
-            //Bearer //7 jwt 이니까 subString 사용해서 잘라낸다.
-            String accessToken = authHeaderStr.substring(7);
-            Map<String, Object> claims = JwtUtil.validateToken(accessToken);
-            String email = (String) claims.get("email");
-            String role = (String) claims.get("role");
-            String username = (String) claims.get("username");
-            String name = (String) claims.get("name");
+            if(authHeaderStr == null || !authHeaderStr.startsWith("Bearer ")){
+                String accessToken = authHeaderStr.substring(7);
+                Map<String, Object> claims = JwtUtil.validateToken(accessToken);
+                String email = (String) claims.get("email");
+                String role = (String) claims.get("role");
+                String username = (String) claims.get("username");
+                String name = (String) claims.get("name");
 
-            UserVO userVO = new UserVO();
-            userVO.setRole(role);
-            userVO.setEmail(email);
-            userVO.setName(name);
-            userVO.setId(username);
+                UserVO userVO = new UserVO();
+                userVO.setRole(role);
+                userVO.setEmail(email);
+                userVO.setName(name);
+                userVO.setId(username);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(name, userVO);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(name, userVO);
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            /* 다음 목적지로 가게해주세요. */
-            filterChain.doFilter(request, response);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                /* 다음 목적지로 가게해주세요. */
+                filterChain.doFilter(request, response);
+            }
+
         } catch (Exception e) {
             /* 토큰이 만료 됐을 때. */
             log.error(e.getMessage());

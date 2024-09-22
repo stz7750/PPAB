@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/api/")
+@RequestMapping("/admin/api")
 public class MenuController {
     //AUTOWIRED는 Derpecated는 아니지만, 경고 수준의 메세지가 뜸 공부 필요함.
     private final MenuService menuService;

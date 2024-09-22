@@ -15,5 +15,6 @@
     <typeAliases>
         <typeAlias alias="EventVO" type="store.stz7750.stz.admin.vo.EventVO"/>
         <typeAlias type="store.stz7750.stz.admin.vo.MenuVo" alias="MenuVo"/>
+        <typeAlias alias="map" type="java.util.Map" />
     </typeAliases>
 </configuration>

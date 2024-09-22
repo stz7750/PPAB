@@ -2,6 +2,7 @@ package store.stz7750.stz.admin.mapper;
 
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import store.stz7750.stz.admin.vo.EventVO;
 import store.stz7750.stz.admin.vo.NewsVO;
 
@@ -20,4 +21,8 @@ public interface AdminMapper {
     int upsertEvent(EventVO vo);
 
     List<Map<String, Object>> selectMenu();
+
+    List<Map<String, Object>> getAddr(Map<String, Object> params);
+
+    void insertCntntSummaryStats(@Param("regBy") String regBy);
  }

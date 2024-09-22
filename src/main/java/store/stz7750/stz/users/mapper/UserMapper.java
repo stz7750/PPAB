@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import store.stz7750.stz.users.vo.UserVO;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -19,6 +21,10 @@ public interface UserMapper {
     UserVO selectUserInfo(@Param("id")String id, @Param("password")String password);
 
     int insertUser(UserVO vo);
+    void insertLoginLog(@Param("id") String id,
+                        @Param("username") String username,
+                        @Param("currentLoginTime") Timestamp currentLoginTime,
+                        @Param("etc") String etc);
 
     
 }

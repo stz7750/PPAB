@@ -1,9 +1,7 @@
 package store.stz7750.stz.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
-
 import store.stz7750.stz.users.vo.UserVO;
 
 public class SecurityUser extends User{
@@ -14,7 +12,7 @@ public class SecurityUser extends User{
 
     public SecurityUser(UserVO userVO){
         super(userVO.getId(), "{noop}"+userVO.getPassword(),
-                AuthorityUtils.createAuthorityList("ROLE_" + userVO.getRole().toString().toUpperCase()));
+                AuthorityUtils.createAuthorityList("ROLE_" + userVO.getRole().toUpperCase()));
 
         this.userVO = userVO;
     }
