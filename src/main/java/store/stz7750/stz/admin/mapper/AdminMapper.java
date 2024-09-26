@@ -25,6 +25,8 @@ public interface AdminMapper {
 
     List<Map<String, Object>> getAddr(Map<String, Object> params);
 
+    List<Map<String, Object>> getAllAddrNm(Map<String, Object> params);
+
     void insertCntntSummaryStats(@Param("regBy") String regBy);
 
     void insertBatchHistory(

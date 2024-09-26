@@ -10,6 +10,21 @@
             event
     </sql>
 
+    <sql id="addr">
+        SELECT
+        <choose>
+            <when test="'addr' == dynamicType">
+                gid,
+                CONCAT(a4, ' ', a5) AS addr
+            </when>
+            <otherwise>
+                ST_X(ST_Centroid(ST_Transform(geom, 4326))) AS longitude,
+                ST_Y(ST_Centroid(ST_Transform(geom, 4326))) AS latitude
+            </otherwise>
+        </choose>
+        FROM GISBUILDSEOUL t1
+    </sql>
+
 
     <insert id="upsertEvent" parameterType="store.stz7750.stz.admin.vo.EventVO">
         INSERT INTO
@@ -202,16 +217,34 @@
     </update>
 
     <select id="getAddr" resultType="map" parameterType="map">
-        SELECT
-            ST_X(ST_Centroid(ST_Transform(geom, 4326))) AS longitude,
-            ST_Y(ST_Centroid(ST_Transform(geom, 4326))) AS latitude
-        FROM GISBUILDSEOUL t1
+        <include refid="addr"></include>
         <where>
             <if test="sigKorNm != null and sigKorNm != ''">
                 a4 LIKE '%' || #{sigKorNm} || '%'
             </if>
             <if test="bunji != null and bunji != ''">
                 AND a5 LIKE '%' || #{bunji}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllAddrNm" parameterType="map">
+        <include refid="addr">
+            <property name="dynamicType" value="addr"/>
+        </include>
+        <where>
+            <if test="startSigKorNm != null and startSigKorNm != ''">
+                a4 LIKE '%' || #{startSigKorNm} || '%'
+                <if test="startBunji != null and startBunji != ''">
+                    AND a5 = #{startBunji}
+                </if>
+            </if>
+
+            <if test="endSigKorNm != null and endSigKorNm != ''">
+                OR a4 LIKE '%' || #{endSigKorNm} || '%'
+                <if test="endBunji != null and endBunji != ''">
+                    AND a5 =#{endBunji}
+                </if>
             </if>
         </where>
     </select>

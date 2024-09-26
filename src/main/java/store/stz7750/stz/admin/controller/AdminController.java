@@ -73,4 +73,18 @@ public class AdminController extends BaseController {
     public List<Map<String, Object>> getAddr(@RequestParam Map<String, Object> params){
         return service.getAddr(params);
     }
+
+    @GetMapping(value="/getAllAddrNm")
+    public List<Map<String,Object>> getAllAddrNm(
+            @RequestParam(name="startSigKorNm", required = false) String startSigKorNm,
+            @RequestParam(name="startBunji", required = false) String startBunji,
+            @RequestParam(name="endSigKorNm", required = false) String endSigKorNm,
+            @RequestParam(name="endBunji", required = false) String endBunji) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("startSigKorNm", startSigKorNm);
+        params.put("startBunji", startBunji);
+        params.put("endSigKorNm", endSigKorNm);
+        params.put("endBunji", endBunji);
+        return service.getAllAddrNm(params);
+    }
 }
