@@ -174,20 +174,6 @@
         </choose>
     </select>
 
-    <select id="selectMenu" resultType="Map">
-        WITH RECURSIVE menu_hierarchy AS (
-            SELECT menu_id, menu_name, parent_menu_id, menu_seq , menu_path, menu_id::text as path, use_yn
-            FROM menu_info
-            where parent_menu_id is null
-            union
-            SELECT mt.menu_id, mt.menu_name, mt.parent_menu_id, mt.menu_seq, mt.menu_path, mh.path  || '=>' || mt.menu_id ::text as path , mt.use_yn
-            FROM menu_info mt
-                     JOIN menu_hierarchy mh ON mt.parent_menu_id = mh.menu_id
-        )
-        SELECT * FROM menu_hierarchy
-        WHERE use_yn = 'Y'
-        order by path
-    </select>
 
     <update id="upsertMenu">
         WITH menu_upsert AS (

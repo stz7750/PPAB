@@ -16,8 +16,14 @@
                      JOIN menu_hierarchy mh ON mt.parent_menu_id = mh.menu_id
         )
         SELECT * FROM menu_hierarchy
+        <where>
+            <if test="useYn != null and useYn != ''">
+                 use_yn = 'Y'
+            </if>
+        </where>
         order by path
     </select>
+
 
     <select id="getMenuById" parameterType="long" resultType="MenuVo">
         /* getMenuById :  특정 메뉴 조회 */

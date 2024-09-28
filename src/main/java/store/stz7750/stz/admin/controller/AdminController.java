@@ -63,11 +63,6 @@ public class AdminController extends BaseController {
         }
     }
 
-    @GetMapping(value="/getMenu")
-    public List<Map<String, Object>> getMenu(){
-        List<Map<String,Object>> result = service.getMenu();
-        return result;
-    }
 
     @GetMapping(value="/getAddr")
     public List<Map<String, Object>> getAddr(@RequestParam Map<String, Object> params){

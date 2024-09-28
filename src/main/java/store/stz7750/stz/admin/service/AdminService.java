@@ -42,9 +42,7 @@ public class AdminService {
         return cntEvent;
     }
 
-    public List<Map<String, Object>> getMenu(){
-        return mapper.selectMenu();
-    }
+
 
     public List<Map<String, Object>> getAddr(Map<String, Object> params){
         return mapper.getAddr(params);

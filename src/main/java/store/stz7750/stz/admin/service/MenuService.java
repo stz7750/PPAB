@@ -6,6 +6,7 @@ import store.stz7750.stz.admin.mapper.MenuMapper;
 import store.stz7750.stz.admin.vo.MenuVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * packageName    : stz-store.stz7750.stz.admin.service
@@ -24,8 +25,8 @@ import java.util.List;
 public class MenuService {
     private final MenuMapper menuMapper;
 
-    public List<MenuVo> getAllMenus() {
-        return menuMapper.getAllMenus();
+    public List<MenuVo> getAllMenus(String useYn) {
+        return menuMapper.getAllMenus(useYn);
     }
     public MenuVo getMenuById(Long menuId) {
         return menuMapper.getMenuById(menuId);
@@ -34,5 +35,6 @@ public class MenuService {
     public String upsertMenuById(MenuVo menu) {
         return menuMapper.upsertMenuById(menu);
     }
+
 }
 

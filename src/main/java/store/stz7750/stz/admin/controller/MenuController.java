@@ -6,6 +6,7 @@ import store.stz7750.stz.admin.service.MenuService;
 import store.stz7750.stz.admin.vo.MenuVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * packageName    : stz-store.stz7750.stz.admin.controller
@@ -27,14 +28,16 @@ public class MenuController {
 
 
     @GetMapping("/getAllMenus")
-    public List<MenuVo> getAllMenus() {
-        return menuService.getAllMenus();
+    public List<MenuVo> getAllMenus(@RequestParam(name="useYn", required = false) String useYn ) {
+        return menuService.getAllMenus(useYn);
     }
 
     @PostMapping("/upsertMenuById")
     public String upsertMenuById(@RequestBody MenuVo vo) {
         return menuService.upsertMenuById(vo);
     }
+
+
 
 }
 

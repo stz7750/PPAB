@@ -21,7 +21,6 @@ public interface AdminMapper {
 
     int upsertEvent(EventVO vo);
 
-    List<Map<String, Object>> selectMenu();
 
     List<Map<String, Object>> getAddr(Map<String, Object> params);
 

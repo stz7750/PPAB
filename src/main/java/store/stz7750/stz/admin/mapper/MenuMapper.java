@@ -16,10 +16,12 @@ import store.stz7750.stz.admin.vo.MenuVo;
  * 7/21/24        stz       최초 생성
  */
 import java.util.List;
+import java.util.Map;
+
 @Mapper
 public interface MenuMapper {
 
-    List<MenuVo> getAllMenus();
+    List<MenuVo> getAllMenus(@Param("useYn") String useYn);
 
     MenuVo getMenuById(@Param("menuId") Long menuId);
 
