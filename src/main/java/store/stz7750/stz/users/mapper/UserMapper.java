@@ -26,5 +26,6 @@ public interface UserMapper {
                         @Param("currentLoginTime") Timestamp currentLoginTime,
                         @Param("etc") String etc);
 
-    
+
+    void insertRandomUserInfo(@Param("count") int count);
 }

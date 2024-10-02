@@ -2,6 +2,7 @@ package store.stz7750.stz.testCase.user.controller;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import store.stz7750.stz.testCase.user.service.UserServiceTest;
 
-@RestController("testUserController")
+@RestController
 @RequiredArgsConstructor
-@Profile("test")
-public class UserController {
+@Component("testUserController")
+public class TestUserController {
 
     private final UserServiceTest userService;
 

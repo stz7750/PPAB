@@ -18,10 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import lombok.extern.log4j.Log4j;
 import store.stz7750.stz.testCase.user.service.UserServiceTest;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(TestUserController.class)
 @AutoConfigureMockMvc(addFilters = false) // srping security를 위한 스킵
 @Log4j
-@ActiveProfiles("test")
 public class UserControllerTest {
 
     @Autowired
@@ -37,7 +36,7 @@ public class UserControllerTest {
 
         // /api/users/insert-random 엔드포인트로 POST 요청을 보냄
         mockMvc.perform(post("/api/users/insert-random")
-                .param("count", String.valueOf(count)))
+                        .param("count", String.valueOf(count)))
                 .andExpect(status().isOk()) // 상태 코드가 200 OK 인지 확인
                 .andExpect(content().string("통과")); // 응답 메시지가 올바른지 확인
 

@@ -76,4 +76,8 @@
                 </if>
     </insert>
 
+    <insert id="insertRandomUserInfo">
+        CALL insert_random_user_info(#{count})
+    </insert>
+
 </mapper>

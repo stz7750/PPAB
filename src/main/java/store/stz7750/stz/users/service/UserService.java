@@ -122,5 +122,8 @@ public class UserService {
         mapper.insertLoginLog(userId, username, timestamp, etc);
     }
 
+    public void insertRandomUsers(int count) {
+        mapper.insertRandomUserInfo(count);
+    }
 
 }
