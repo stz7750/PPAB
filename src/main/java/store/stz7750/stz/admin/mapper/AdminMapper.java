@@ -36,4 +36,8 @@ public interface AdminMapper {
             @Param("status") String status,
             @Param("errorMessage") String errorMessage
     );
+
+    void insertWebLog(Map<String, Object> logData);
+
+    List<Map<String, Object>> contentCnt();
  }

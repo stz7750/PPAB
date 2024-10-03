@@ -174,6 +174,21 @@
         </choose>
     </select>
 
+    <select id="contentCnt" resultType="map">
+        SELECT (
+                SELECT
+                        count(event_id)
+                FROM
+                        event
+                ) AS event_cnt,
+                (
+                SELECT
+                     count(id)
+                FROM
+                    userInfo
+                ) AS user_cnt
+    </select>
+
 
     <update id="upsertMenu">
         WITH menu_upsert AS (
@@ -279,6 +294,24 @@
                 #{errorMessage}
             );
     </insert>
+
+    <insert id="insertWebLog" parameterType="map">
+        INSERT INTO web_log (
+            user_id,
+            http_status_code,
+            error_message,
+            request_date,
+            request_location
+        )
+        VALUES (
+                   #{userId},
+                   #{httpStatusCode},
+                   #{errorMessage},
+                   #{requestDate},
+                   #{requestLocation}
+               )
+    </insert>
+
 
 
 </mapper>

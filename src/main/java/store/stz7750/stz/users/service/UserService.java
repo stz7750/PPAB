@@ -19,6 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type User service.
@@ -124,6 +125,10 @@ public class UserService {
 
     public void insertRandomUsers(int count) {
         mapper.insertRandomUserInfo(count);
+    }
+
+    public void addMenuAccessLog(Map<String ,Object> MenuAccessLog){
+        mapper.insertMenuAccessLog(MenuAccessLog);
     }
 
 }

@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import store.stz7750.stz.admin.service.AdminService;
 import store.stz7750.stz.admin.vo.EventVO;
-import store.stz7750.stz.admin.vo.NewsVO;
-import store.stz7750.stz.global.controller.BaseController;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +15,7 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/admin/api")
-public class AdminController extends BaseController {
+public class AdminController {
 
     @Autowired
     AdminService service;
@@ -81,5 +78,12 @@ public class AdminController extends BaseController {
         params.put("endSigKorNm", endSigKorNm);
         params.put("endBunji", endBunji);
         return service.getAllAddrNm(params);
+    }
+
+
+    @GetMapping(value="/getContentCnt")
+    public List<Map<String,Object>> getContentCnt(){
+        List<Map<String ,Object>> result = service.contentCnt();
+        return result;
     }
 }

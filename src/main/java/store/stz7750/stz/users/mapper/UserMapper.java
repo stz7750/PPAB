@@ -10,6 +10,7 @@ import store.stz7750.stz.users.vo.UserVO;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -28,4 +29,6 @@ public interface UserMapper {
 
 
     void insertRandomUserInfo(@Param("count") int count);
+
+    void insertMenuAccessLog(Map<String, Object> MenuAccessLog);
 }

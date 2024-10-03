@@ -74,10 +74,36 @@
                 <if test="etc != null and etc != ''">
                     , etc = #{etc}
                 </if>
+               ,login_duration = (
+                                    SELECT
+                                        DATE_PART('day',CURRENT_LOGIN_TIME::timestamp - LAST_LOGIN_TIME ::timestamp) || '일'
+                                    FROM
+                                        LOGIN_LOGS
+                                    WHERE
+                                        id = #{id}
+                                )
     </insert>
 
-    <insert id="insertRandomUserInfo">
+<!--    <insert id="insertRandomUserInfo">
         CALL insert_random_user_info(#{count})
+    </insert>-->
+
+    <insert id="insertMenuAccessLog" parameterType="map">
+        INSERT INTO
+            menu_access_log
+        (
+            user_id,
+            menu_path,
+            menu_name,
+            access_time
+        )
+        VALUES
+            (
+                #{userId},
+                #{menuPath},
+                (SELECT menu_name FROM menu_info WHERE MENU_PATH = #{menuPath}),
+                #{accessTime}
+            )
     </insert>
 
 </mapper>

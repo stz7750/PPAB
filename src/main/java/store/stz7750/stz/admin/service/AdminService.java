@@ -68,4 +68,13 @@ public class AdminService {
         // MyBatis 메서드 호출
         mapper.insertBatchHistory(jobName, startTimestamp, endTimestamp, durationSeconds, status, errorMessage);
     }
+
+    public void addWebLog(Map<String, Object>logData){
+         mapper.insertWebLog(logData);
+    }
+
+    public List<Map<String, Object>> contentCnt () {
+        return mapper.contentCnt();
+    }
+
 }

@@ -46,4 +46,14 @@ public class UserControllerTest {
         log.info("===========================테스트 종료======================");
 
     }
+
+    @Test
+    @DisplayName("NullPointerException 발생 API 테스트")
+    public void testInsertRandomUsersWithNullPointerException() throws Exception {
+        mockMvc.perform(post("/api/users/insert-random")
+                        .param("count", "null")) // 잘못된 파라미터 전달
+                .andExpect(status().isInternalServerError()); // 500 에러 기대
+
+        log.info("===========================테스트 종료======================");
+    }
 }

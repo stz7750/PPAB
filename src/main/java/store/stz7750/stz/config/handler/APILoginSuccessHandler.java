@@ -40,11 +40,11 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler{
             UserVO userVO = securityUser.getUser();
             userService.logUserLogin(userVO.getId(), userVO.getName(), "Login successful");
             Map<String, Object> claims = new HashMap<>();
-            claims.put("username", userVO.getId()); 
+            claims.put("id", userVO.getId());
             claims.put("name", userVO.getName()); 
             claims.put("email", userVO.getEmail()); 
             claims.put("role", userVO.getRole());
-            String accessToken = JwtUtil.generateToken(claims, 10);
+            String accessToken = JwtUtil.generateToken(claims, 60*24);
             String refreshToken = JwtUtil.generateToken(claims,60*24);
             claims.put("accessToken",accessToken);
             claims.put("refreshToken", refreshToken);
