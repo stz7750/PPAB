@@ -5,7 +5,14 @@
 <mapper namespace="store.stz7750.stz.admin.mapper.AdminMapper">
     <sql id="selectNews">
         SELECT
-            *
+            title,
+            CONTENT,
+            images,
+            reg_dt,
+            BNGN_DT,
+            END_DT,
+            TYPE,
+            EDITOR
         FROM
             event
     </sql>
@@ -66,7 +73,7 @@
             type = EXCLUDED.type
     </insert>
 
-    <select id="selectNews" resultType="store.stz7750.stz.admin.vo.EventVO">
+    <select id="selectNews" resultType="EventVO">
         <include refid="selectNews" />
         <where>
             <choose>

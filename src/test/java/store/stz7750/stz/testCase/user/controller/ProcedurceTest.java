@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import store.stz7750.stz.testCase.user.TestStatus;
 import store.stz7750.stz.testCase.user.service.UserServiceTest;
 
 @SpringBootTest
@@ -40,5 +41,22 @@ public class ProcedurceTest {
         userService.insertRandomUsers(count);
 
         log.info("============== 테스트 종료 =============");
+    }
+
+    @Test
+    @DisplayName("toTest: 사용자 이벤트를 가져오는 API 테스트")
+    public void doEventTest() {
+        userService.getEventList(null);
+
+    }
+
+    @Test
+    @DisplayName("toTest: 특정 사용자의 이벤트를 가져오는 API 테스트")
+    public void doEditorTest(){
+        log.info(TestStatus.TEST_STARTED.getMessage());
+
+        String editor = "admin";
+        userService.getEventList(editor);
+        log.info(TestStatus.TEST_FINISHED.getMessage());
     }
 }

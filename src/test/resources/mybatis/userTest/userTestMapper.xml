@@ -8,4 +8,21 @@
     <insert id="insertRandomUserInfo">
         CALL insert_random_user_info(#{count})
     </insert>
+
+    <select id="getEventList" resultType="map">
+        SELECT title,
+               CONTENT,
+               images,
+               BNGN_DT,
+               END_DT,
+               TYPE,
+               EDITOR
+        FROM
+            event
+        <where>
+            <if test="editor != null and editor != ''">
+                editor = #{editor}
+            </if>
+        </where>
+    </select>
 </mapper>
